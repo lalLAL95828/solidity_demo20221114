@@ -8,18 +8,17 @@ const hre = require("hardhat");
 
 async function main() {
   const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+  const ONE_Hour_IN_SECS = 1 * 60 * 60;
+  const unlockTime = currentTimestampInSeconds + ONE_Hour_IN_SECS;
 
-  const lockedAmount = hre.ethers.utils.parseEther("1");
+  const lockedAmount = hre.ethers.utils.parseEther("0.05");
 
   const Lock = await hre.ethers.getContractFactory("Lock");
   const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
 
   await lock.deployed();
-
   console.log(
-    `Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
+    `Lock with ${lockedAmount} ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
   );
 }
 
@@ -29,3 +28,9 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+
+
+//部署时的参数
+//Lock with 0.05 ETH and unlock timestamp 1668499709 deployed to 0xfd92EFa95a72379732E6702FBC65e6f653A8188B
+//npx hardhat verify --network goerli 0xfd92EFa95a72379732E6702FBC65e6f653A8188B 1668499709
+//npx hardhat verify --network localhost 0x5FbDB2315678afecb367f032d93F642f64180aa3 1668506144
